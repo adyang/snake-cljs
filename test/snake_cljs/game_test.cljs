@@ -36,13 +36,13 @@
 (deftest update-positions-move-snake-test
   (let [state {:snake (create-snake 3 right)
                :food {:coord [3 3]}}
-        updated-state (update-positions state)]
+        updated-state (update-positions state {:width 50 :height 100})]
     (is (= [[3 0] [2 0] [1 0]] (:body (:snake updated-state))))
     (is (= [3 3] (:coord (:food updated-state))))))
 
 (deftest update-positions-grow-snake-test
   (let [state {:snake (create-snake 3 right)
                :food {:coord [2 0]}}
-        updated-state (update-positions state)]
+        updated-state (update-positions state {:width 50 :height 100})]
     (is (= [[3 0] [2 0] [1 0] [0 0] (:body (:snake updated-state))]))
     (is (not (identical? (:coord (:food state)) (:coord (:food updated-state)))))))

@@ -40,10 +40,9 @@
     snake
     (assoc snake :direction direction)))
 
-(def board {:width 50 :height 100})
-
 (defn update-positions [{:keys [snake food]
-                         :as state}]
+                         :as state}
+                        board]
   (if (eats? snake food)
     (assoc state :snake (grow snake) :food (create-food board))
     (assoc state :snake (move snake))))
