@@ -4,7 +4,7 @@
             [goog.graphics :as graphics]
             [goog.events :as events]
             [cljs.core.async :refer [<! chan timeout]]
-            [snake-cljs.game :refer [create-snake create-food update-positions change-direction self-collide? up down left right]]))
+            [snake-cljs.game :refer [create-snake create-food update-positions update-direction self-collide? up down left right]]))
 
 (def fps 20)
 (def scale 10)
@@ -41,10 +41,6 @@
 (defn new-game-state []
   {:snake (create-snake snake-length right)
    :food (create-food board)})
-
-(defn update-direction [state direction]
-  (let [snake (:snake state)]
-    (assoc state :snake (change-direction snake direction))))
 
 (defn create-direction-handler [state]
   (fn [event]

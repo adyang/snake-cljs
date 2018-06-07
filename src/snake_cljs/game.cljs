@@ -40,6 +40,10 @@
     snake
     (assoc snake :direction direction)))
 
+(defn update-direction [state direction]
+  (let [snake (:snake state)]
+    (assoc state :snake (change-direction snake direction))))
+
 (defn update-positions [{:keys [snake food]
                          :as state}
                         board]

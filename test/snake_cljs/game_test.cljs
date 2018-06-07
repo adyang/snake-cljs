@@ -1,6 +1,6 @@
 (ns snake-cljs.game-test
   (:require [cljs.test :refer-macros [deftest is testing run-tests]]
-            [snake-cljs.game :refer [create-snake create-food eats? self-collide? move grow change-direction update-positions down left right]]))
+            [snake-cljs.game :refer [create-snake create-food eats? self-collide? move grow change-direction update-direction update-positions up down left right]]))
 
 (deftest create-snake-test
   (is (= {:body      [[2 0] [1 0] [0 0]]
@@ -32,6 +32,11 @@
 (deftest change-direction-test
   (is (= down (:direction (change-direction (create-snake 3 right) down))))
   (is (= right (:direction (change-direction (create-snake 3 right) left)))))
+
+(deftest update-direction-test
+  (let [state {:snake (create-snake 3 right)
+               :food {:coord [3 3]}}]
+    (is (= up (get-in (update-direction state up) [:snake :direction])))))
 
 (deftest update-positions-move-snake-test
   (let [state {:snake (create-snake 3 right)
