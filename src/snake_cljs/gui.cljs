@@ -38,23 +38,41 @@
     "ArrowRight" right
     nil))
 
+(defn new-game-state []
+  {:snake (create-snake snake-length right)
+   :food (create-food board)})
+
+(defn update-direction [state direction]
+  (let [snake (:snake state)]
+    (assoc state :snake (change-direction snake direction))))
+
+(defn create-direction-handler [state]
+  (fn [event]
+    (when-let [direction (dir-vec event)]
+      (swap! state update-direction direction)
+      (.preventDefault event))))
+
+(defn draw [graphics state-snapshot]
+  (.clear graphics)
+  (draw-snake graphics (:snake state-snapshot))
+  (draw-food graphics (:food state-snapshot)))
+
+(defn check-end-game [state]
+  (when (self-collide? (:snake @state))
+    (js/alert "Game Over!")
+    (reset! state (new-game-state))))
+
+(defn game-loop [graphics state]
+  (go-loop []
+           (draw graphics @state)
+           (<! (timeout (/ 1000 fps)))
+           (swap! state update-positions board)
+           (check-end-game state)
+           (recur)))
+
 (defn start []
   (let [canvas (dom/getElement "canvas")
         graphics (create-graphics canvas)
-        state (atom {:snake (create-snake snake-length right)
-                     :food (create-food board)})]
-    (events/listen js/document "keydown" (fn [e]
-                                           (when-let [direction (dir-vec e)]
-                                             (swap! state #(assoc %1 :snake (change-direction (:snake %1) %2)) direction)
-                                             (.preventDefault e))))
-    (go-loop []
-      (.clear graphics)
-      (draw-snake graphics (:snake @state))
-      (draw-food graphics (:food @state))
-      (<! (timeout (/ 1000 fps)))
-      (swap! state update-positions board)
-      (when (self-collide? (:snake @state))
-        (js/alert "Game Over!")
-        (reset! state {:snake (create-snake snake-length right)
-                       :food (create-food board)}))
-      (recur))))
+        state (atom (new-game-state))]
+    (events/listen js/document "keydown" (create-direction-handler state))
+    (game-loop graphics state)))
