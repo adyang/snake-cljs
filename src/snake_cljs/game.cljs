@@ -24,13 +24,17 @@
 (defn add-coords [coordOne coordTwo]
   (mapv + coordOne coordTwo))
 
-(defn move [{:keys [body direction] :as snake}]
-  (let [new-head (add-coords (first body) direction)
+(defn generate-new-head [[head _] direction {width :width height :height}]
+  (let [coord (add-coords head direction)]
+    (mapv mod coord [width height])))
+
+(defn move [{:keys [body direction] :as snake} board]
+  (let [new-head (generate-new-head body direction board)
         new-body (cons new-head (butlast body))]
     (assoc snake :body new-body)))
 
-(defn grow [{:keys [body direction] :as snake}]
-  (let [new-head (add-coords (first body) direction)
+(defn grow [{:keys [body direction] :as snake} board]
+  (let [new-head (generate-new-head body direction board)
         new-body (cons new-head body)]
     (assoc snake :body new-body)))
 
@@ -48,5 +52,5 @@
                          :as state}
                         board]
   (if (eats? snake food)
-    (assoc state :snake (grow snake) :food (create-food board))
-    (assoc state :snake (move snake))))
+    (assoc state :snake (grow snake board) :food (create-food board))
+    (assoc state :snake (move snake board))))

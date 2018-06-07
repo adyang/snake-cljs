@@ -23,11 +23,26 @@
   (is (not (self-collide? {:body [[1 2] [1 3] [0 3] [0 2]]}))))
 
 (deftest move-test
-  (is (= [[3 0] [2 0] [1 0]] (:body (move (create-snake 3 right)))))
-  (is (= [[2 1] [2 0] [1 0]] (:body (move (create-snake 3 down))))))
+  (let [board {:width 20 :height 10}]
+    (is (= [[3 0] [2 0] [1 0]] (:body (move (create-snake 3 right) board))))
+    (is (= [[2 1] [2 0] [1 0]] (:body (move (create-snake 3 down) board))))))
 
 (deftest grow-test
-  (is (= [[3 0] [2 0] [1 0] [0 0]] (:body (grow (create-snake 3 right))))))
+  (is (= [[3 0] [2 0] [1 0] [0 0]]
+         (:body (grow (create-snake 3 right) {:width 20 :height 10})))))
+
+(deftest move-grow-wall-teleport-test
+  (let [board {:width 20 :height 10}
+        top-left-body [[0 0] [1 0] [2 0]]
+        bottom-right-body [[19 9] [18 9] [17 9]]]
+    (is (= [[19 0] [0 0] [1 0]]
+           (:body (move {:body top-left-body :direction left} board))))
+    (is (= [[0 9] [0 0] [1 0]]
+           (:body (move {:body top-left-body :direction up} board))))
+    (is (= [[0 9] [19 9] [18 9] [17 9]]
+           (:body (grow {:body bottom-right-body :direction right} board))))
+    (is (= [[19 0] [19 9] [18 9] [17 9]]
+           (:body (grow {:body bottom-right-body :direction down} board))))))
 
 (deftest change-direction-test
   (is (= down (:direction (change-direction (create-snake 3 right) down))))
