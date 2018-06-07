@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/adyang/snake-cljs.svg?branch=master)](https://travis-ci.org/adyang/snake-cljs)
+
 # Snake in ClojureScript
 
 Snake game written in ClojureScript as part of the exercise in chapter 6 of
