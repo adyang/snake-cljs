@@ -21,9 +21,9 @@
                            :preloads [devtools.preload]}}
                {:id "test"
                 :source-paths ["src" "test"]
-                :compiler {:main snake-cljs.test-runner
-                           :output-to "resources/public/js/compiled/snake_cljs_test.js"
-                           :output-dir "resources/public/js/compiled/out/test"
+                :compiler {:main runners.doo
+                           :output-to "resources/public/js/compiled/test/snake_cljs.js"
+                           :output-dir "resources/public/js/compiled/test/out"
                            :optimizations :none}}
                {:id "min"
                 :source-paths ["src"]
