@@ -9,7 +9,7 @@
 (def fps 20)
 (def scale 10)
 (def board {:width 55 :height 35})
-(def snake-length 40)
+(def snake-length 5)
 (def snake-color (graphics/SolidFill. "blue"))
 (def food-color (graphics/SolidFill. "red"))
 
